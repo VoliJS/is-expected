@@ -1,5 +1,6 @@
 export const unary = {
     number : ( x : any ) => typeof x === 'number',
+    boolean : ( x : any ) => typeof x === 'boolean',
     string : ( x : any ) => typeof x === 'string',
     'undefined' : ( x : any ) => typeof x === 'undefined',
     'function' : ( x : any ) => typeof x === 'function',
@@ -37,6 +38,16 @@ export const binary = {
         return true;
     },
     shape : hasShape
+}
+
+export const combinators = {
+    either( x : any, predicates : ( ( x : any ) => boolean )[] ){
+        for( let p of predicates ){
+            if( !p( x ) ) return true;
+        }
+
+        false;
+    }
 }
 
 export type ObjectPropChecker = ( x : any, key? : string ) => any
