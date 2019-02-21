@@ -13,6 +13,7 @@ Check is a function taking the value and returning boolean. Checks can be create
 ### Simple type checks
 
 - `is.undefined`
+- `is.integer`
 - `is.number`
 - `is.string`
 - `is.boolean`
@@ -25,8 +26,11 @@ Check is a function taking the value and returning boolean. Checks can be create
 
 ### Simple comparisons
 
-- `is.eq`
-- `is.le`
+- `is.empty` - x is null or undefined.
+- `is.falsy` - !x.
+- `is.truthy` - !!x.
+- `is.eq( y )`
+- `is.le( y )`
 - `is.lt`
 - `is.ge`
 - `is.gt`
@@ -40,4 +44,4 @@ Check is a function taking the value and returning boolean. Checks can be create
 
 ### Combinators
 
--  `is.either( is.string, is.number )`
+-  `is.either( is.string, is.number, ... )`

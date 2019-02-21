@@ -35,4 +35,21 @@ describe( 'type asserts', ()=>{
         is( {} ).object;
         expect( () => is( null ).object ).toThrow();
     });
+
+    it( 'dsds', () =>{
+        const res = [];
+
+        is( res ).arrayHaving([ 1, 2, 3 ])
+        is( res )
+            .oneOf([
+                is.empty,
+                is.objectLike({ length : is.ge( 2 ).le( 6 ) })
+                    .arrayWithPairs(
+                        ( a, b ) => a <= b
+                    ),
+                
+            ])
+            
+    });
 })
+

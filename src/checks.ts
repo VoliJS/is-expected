@@ -1,5 +1,6 @@
 export const unary = {
     number : ( x : any ) => typeof x === 'number',
+    integer : ( x : any ) => typeof x === 'number' && ( x | 0 ) === x,
     boolean : ( x : any ) => typeof x === 'boolean',
     string : ( x : any ) => typeof x === 'string',
     'undefined' : ( x : any ) => typeof x === 'undefined',
@@ -7,7 +8,10 @@ export const unary = {
     symbol : ( x : any ) => typeof x === 'symbol',
     object : ( x : any ) => typeof x === 'object',
     array : ( x : any ) => Array.isArray( x ),
-    plainObject : ( x : any ) => x && Object.getPrototypeOf( x ) === Object.prototype
+    plainObject : ( x : any ) => x && Object.getPrototypeOf( x ) === Object.prototype,
+    empty : ( x : any ) => x == null,
+    falsy : ( x : any ) => !x,
+    truthy : ( x : any ) => Boolean( x )
 }
 
 export const binary = {
@@ -18,8 +22,13 @@ export const binary = {
     gt : ( x, a ) => x > a,
     instanceOf : ( x, C : Function ) => x == null || x instanceof C,
     stringLike : ( x : string, a : RegExp ) => unary.string( x ) && a.test( x ),
-    arrayOf : ( x : any[] , predicate : ( x : any, ix : number ) => boolean ) => unary.array( x ) && x.every( predicate ),
-    arrayOfPairs : ( arr : any[], predicate : ( prev : any, next : any ) => boolean ) => {
+    arrayOf : ( x : any[] , predicate : ( x : any, ix? : number ) => boolean ) => unary.array( x ) && x.every( predicate ),
+
+    // RENAME:
+    arrayHaving : ( x : any[] , predicate : ( x : any, ix? : number ) => boolean ) => unary.array( x ) && x.some( predicate ),
+    
+    // RENAME:
+    arrayWithPairs : ( arr : any[], predicate : ( prev : any, next : any ) => boolean ) => {
         if( !unary.array( arr ) ) return false;
         
         for( let i = 1; i < arr.length; i++ ){
@@ -28,7 +37,20 @@ export const binary = {
     
         return true;
     },
-    objectOf : ( x : object , predicate : ( x : any, key : string ) => boolean ) => {
+
+    //
+    oneOf: ( x : any, elements : any[] ) => {
+        for( let el of elements ){
+            if( typeof el === 'function' ){
+                if( el( x ) ) return true;
+            }
+            else if( el === x ) return true;
+        }
+
+        return false;
+    },
+
+    objectOf : ( x : object , predicate : ( x : any, key? : string ) => boolean ) => {
         if( !unary.object( x ) ) return false;
 
         for( let key of Object.keys( x ) ){
@@ -37,7 +59,7 @@ export const binary = {
 
         return true;
     },
-    shape : hasShape
+    objectLike : hasShape
 }
 
 export const combinators = {
